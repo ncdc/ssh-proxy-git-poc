@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+echo ${SSH_ORIGINAL_COMMAND} >> /tmp/sshes
+if [[ ${SSH_ORIGINAL_COMMAND} != "git-"* ]]; then
+  echo "Sorry, your command isn't allowed"
+  exit 1
+fi
+
+KEYTEMPDIR=`mktemp -d tempkey.XXXXXX`
+PRIVATEKEYFILE="${KEYTEMPDIR}/${USER}.${TOKEN}"
+PUBLICKEYFILE="${KEYTEMPDIR}/${USER}.${TOKEN}.pub"
+
+# get the last arg i.e. repo
+for REPO in ${SSH_ORIGINAL_COMMAND}; do :; done
+REPO="${REPO%\'}"
+REPO="${REPO#\'}"
+ssh-keygen -f ${PRIVATEKEYFILE} -b 2048 -t rsa -q -N ""
+
+curl --silent --fail --data-urlencode "user=${REPO}" --data-urlencode "token_user=${USER}" --data-urlencode "token=${TOKEN}" --data-urlencode "key=`cat ${PUBLICKEYFILE}`" http://10.211.55.4:8000/single-use-keys
+
+exec ssh -o "StrictHostKeyChecking no" -i ${PRIVATEKEYFILE} -p 8200 ${REPO}@10.211.55.4 ${SSH_ORIGINAL_COMMAND}

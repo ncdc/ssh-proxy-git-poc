@@ -1,0 +1,8 @@
+AuthorizedKeysCommand /sshproxy/get-authorized-keys
+AuthorizedKeysCommandUser authkey
+RSAAuthentication yes
+PubkeyAuthentication yes
+PasswordAuthentication no
+ForceCommand /bin/false
+Port 8100
+PermitUserEnvironment yes

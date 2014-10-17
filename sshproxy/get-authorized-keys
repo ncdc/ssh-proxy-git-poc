@@ -1,0 +1,3 @@
+#!/bin/bash
+# get authorized keys for $user/$1
+curl --silent "http://10.211.55.4:8000/proxy-auth-keys/$1"

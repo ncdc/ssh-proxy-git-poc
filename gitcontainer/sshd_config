@@ -1,0 +1,6 @@
+AuthorizedKeysCommand /gitssh/get-authorized-keys
+AuthorizedKeysCommandUser authkey
+RSAAuthentication yes
+PubkeyAuthentication yes
+PasswordAuthentication no
+Port 8200
