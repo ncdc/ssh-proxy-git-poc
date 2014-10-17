@@ -20,7 +20,7 @@ get '/proxy-auth-keys/:user' do |user|
   end
   tokens[token] = user
   r =<<EOF
-environment="TOKEN=#{token}",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty #{key}
+environment="AUTH_SERVER=#{ENV['AUTH_SERVER']}",environment="TOKEN=#{token}",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty #{key}
 EOF
   r.chomp
 end
@@ -35,6 +35,12 @@ post '/single-use-keys' do
   single_use_keys[user] ||= []
   single_use_keys[user] << new_key
   201
+end
+
+get '/backend-info/:repo' do |repo|
+  if repo == 'repo1'
+    "-p #{ENV['GIT_PORT']} #{ENV['GIT_SERVER']}"
+  end
 end
 
 get '/backend-auth-keys' do

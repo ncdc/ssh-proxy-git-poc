@@ -16,9 +16,10 @@ REPO="${REPO%\'}"
 REPO="${REPO#\'}"
 ssh-keygen -f ${PRIVATEKEYFILE} -b 2048 -t rsa -q -N ""
 
-curl --silent --fail --data-urlencode "user=${REPO}" --data-urlencode "token_user=${USER}" --data-urlencode "token=${TOKEN}" --data-urlencode "key=`cat ${PUBLICKEYFILE}`" http://10.211.55.4:8000/single-use-keys
+curl --silent --fail --data-urlencode "user=${REPO}" --data-urlencode "token_user=${USER}" --data-urlencode "token=${TOKEN}" --data-urlencode "key=`cat ${PUBLICKEYFILE}`" ${AUTH_SERVER}/single-use-keys
 
 mkdir -p ${HOME}/.ssh
-ssh-keyscan -p 8200 10.211.55.4 2>/dev/null >> ${HOME}/.ssh/known_hosts
+GIT_SERVER=`curl --silent --fail -o - ${AUTH_SERVER}/backend-info/${REPO}`
+ssh-keyscan ${GIT_SERVER} 2>/dev/null >> ${HOME}/.ssh/known_hosts
 
-exec ssh -i ${PRIVATEKEYFILE} -p 8200 ${REPO}@10.211.55.4 ${SSH_ORIGINAL_COMMAND}
+exec ssh -i ${PRIVATEKEYFILE} -l ${REPO} ${GIT_SERVER} ${SSH_ORIGINAL_COMMAND}

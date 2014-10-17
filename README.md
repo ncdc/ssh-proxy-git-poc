@@ -19,7 +19,7 @@ Run the mock auth server:
 ```
 cd mockauth
 bundle
-ruby app.rb -o 0.0.0.0 -p 8000
+AUTH_SERVER=... GIT_PORT=8200 GIT_SERVER=... ruby app.rb -o 0.0.0.0 -p 8000
 ```
 
 Build the git and ssh images:
@@ -34,13 +34,13 @@ docker build --rm -t <yourname>/ssh .
 Run the git container:
 
 ```
-docker run --name git -d -p 8200 <yourname>/git
+docker run --name git -d -e AUTH_SERVER=... -p 8200 <yourname>/git
 ```
 
 Run the ssh proxy container:
 
 ```
-docker run --name ssh -d -p 8100 <yourname>/ssh
+docker run --name ssh -d -e AUTH_SERVER=... -p 8100 <yourname>/ssh
 ```
 
 Set up your `$HOME/.ssh/config` so git will work:
