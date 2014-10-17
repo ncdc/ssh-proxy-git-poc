@@ -19,7 +19,7 @@ Run the mock auth server:
 ```
 cd mockauth
 bundle
-ruby app.rb -o 0.0.0.0 -p 80000
+ruby app.rb -o 0.0.0.0 -p 8000
 ```
 
 Build the git and ssh images:
